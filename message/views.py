@@ -25,6 +25,9 @@ def chats(request):
     chats = list(chats)
     chats.sort( key = lambda x : x[1].created)
 
+    chats = dict(chats)
+
+
     context = { 'chats':chats,'page':page}
     return render(request, 'message/chats.html', context)
 
@@ -44,7 +47,8 @@ def chat(request, pk):
     room_name = Message.getRoomName(user, request.user)
     try:
         id = messages[-1].id
-    except:
+    except:   
+
         id = 0
     
     context = {'messages':messages,'user':user, 'room_name':room_name,'id':id}
