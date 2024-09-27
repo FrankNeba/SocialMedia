@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+    {% include 'tailwind.html' %}
+</head>
+<body class="bg-slate-50 flex flex-col text-slate-600 justify-between min-h-[100vh]">
+    {% include 'navbar.html' %}
+    <div
+      class="p-5 flex flex-col self-center items-center w-full sm:w-2/3 md:w-1/2 pt-20 "
+    >
+        {% if page == 'edit' %}
+      <h1 class="text-3xl text-yellow-600 font-extrabold">Edit Post</h1>
+      {% else %}
+      <h1 class="text-3xl text-yellow-600 font-extrabold"> Post</h1>
+      {% endif %}
+      <form action="" method="post" class="w-full shadow-md p-5 space-y-6 bg-slate-100" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="text-xl space-y-2">
+          
+          <textarea
+            class="border-2 border-primary w-full rounded-md p-3 outline-none h-80"
+            name="text"
+            id="text"
+          >{{post.text}}</textarea>
+        </div>
+        <div class="flex w-full justify-around">
+             <div class="text-xl space-y-2">
+          <label for="images" class="text-primary text-3xl">
+            <i class="fa-regular fa-image"></i>
+            <span class="hidden md:block">Add images</span>
+          </label>
+          <input
+            class="hidden"
+            type="file"
+            name="images"
+            id="images"
+            accept="image/*"
+            multiple
+          />
+        </div>
+        <div class="text-xl space-y-2">
+            <label for="images" class="text-primary text-3xl">
+              <i class="fa-solid fa-video"></i>
+              <span class="hidden md:block">Add video</span>
+            </label>
+            <input
+              class="hidden"
+              type="file"
+              name="video"
+              id="video"
+              accept="video/*"
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="bg-primary p-3 rounded-md w-full font-medium text-white text-xl"
+        >
+          Post
+        </button>
+        {% for message in messages %}
+            <p class="text-red-500">{{message}}</p>
+        {% endfor %}
+      </form>
+    </div>
+    <script
+    src="https://kit.fontawesome.com/bef6373e3c.js"
+    crossorigin="anonymous"
+  ></script>
+</body>
+</html>

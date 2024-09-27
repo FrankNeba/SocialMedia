@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{user.username}}</title>
+</head>
+<body>
+    {% include 'posts/navbar.html' %}
+    <h1>Signup</h1>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="image">
+            <img src="{{user.image.url}}" alt="profile picture">
+        </label>
+        <input type="file" name="image" id="image" accept="image/*" style="display: none;">
+
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" value="{{user.email}}" >
+
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" value="{{user.username}}" >
+
+        <label for="firstname">Firstname</label>
+        <input type="text" name="firstname" id="firstname"  value="{{user.first_name}}">
+
+        <label for="lastname">Lastname</label>
+        <input type="text" name="lastname" id="lastname" value="{{user.last_name}}">
+
+        <button type="submit">save</button>
+    </form>
+
+    {% for message in messages %}
+
+    <p>{{message}}</p>
+
+    {% endfor %}
+</body>
+</html>

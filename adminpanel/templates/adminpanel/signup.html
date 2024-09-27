@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+    {% include 'tailwind.html' %}
+  </head>
+  <body class="flex flex-col text-slate-600 bg-slate-100 justify-between min-h-[100vh]">
+    <div
+      class="p-5 flex flex-col self-center items-center w-full sm:w-2/3 md:w-1/2"
+    >
+      <h1 class="text-3xl text-yellow-600 font-extrabold">Signup</h1>
+      <form action="" method="post" class="w-full shadow-md p-5 space-y-6">
+        {% csrf_token %}
+        <!-- <fieldset>
+                <legend>Signup</legend>
+            </fieldset> -->
+        <div class="text-xl space-y-2">
+          <label for="email">Email</label>
+          <input
+            class="border-2 border-primary w-full rounded-md p-3 outline-none"
+            type="email"
+            name="email"
+            id="email"
+            placeholder="email"
+            required
+          />
+        </div>
+
+        <div class="text-xl space-y-2">
+          <label for="username">Username</label>
+          <input
+            class="border-2 border-primary w-full rounded-md p-3 outline-none"
+            type="text"
+            name="username"
+            id="username"
+            placeholder="username"
+            required
+          />
+        </div>
+
+        <div class="text-xl space-y-2 relative">
+          <label for="password">Password</label>
+          <input
+            class="border-2 border-primary w-full rounded-md p-3 outline-none"
+            type="password"
+            name="password"
+            id="password"
+            placeholder="password"
+            required
+          />
+          <button
+            type="button"
+            class="absolute right-0 px-5 py-3"
+            id="password-visibility1"
+          >
+            <small id="visibility-text1">show</small>
+          </button>
+        </div>
+
+        <div class="text-xl space-y-2 relative">
+          <label for="passwordConfirm">Confirm Password</label>
+          <input
+            class="border-2 border-primary w-full rounded-md p-3 outline-none"
+            type="password"
+            name="passwordConfirm"
+            id="passwordConfirm"
+            placeholder="confirm password"
+            required
+          />
+          <button
+            type="button"
+            class="absolute right-0 px-5 py-3"
+            id="password-visibility"
+          >
+            <small id="visibility-text">show</small>
+          </button>
+        </div>
+
+        <button
+          type="submit"
+          class="bg-primary p-3 rounded-md w-full font-medium text-white text-xl"
+        >
+          Signup
+        </button>
+        {% for message in messages %}
+            <p class="text-red-500">{{message}}</p>
+        {% endfor %}
+        <p class="text-xl">
+          Already have an account?
+          <a href="{% url 'admin_login' %}" class="text-primary">login</a>
+        </p>
+      </form>
+    </div>
+
+    <p class="text-xs text-primary opacity-55 ml-10">
+      &copy; SOCIA 2024. All rights reserved.
+    </p>
+  </body>
+  {% load static %}
+  <script src="{% static 'js/authenticate.js' %}"></script>
+</html>

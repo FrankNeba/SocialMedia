@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+{% include 'tailwind.html' %}
+<body class="bg-slate-100 flex flex-col text-slate-600 justify-between min-h-[100vh]">
+    <div
+      class="p-5 flex flex-col self-center items-center w-full sm:w-2/3 md:w-1/2"
+    >
+        <h1 class="text-3xl text-yellow-600 font-extrabold">Login</h1>
+        <form action="" method="post" class="w-full shadow-md p-5 space-y-6">
+            {% csrf_token %}
+
+            <div class="text-xl space-y-2">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" class="border-2 border-primary w-full rounded-md p-3 outline-none" required>
+
+            </div>
+            
+            <div class="text-xl space-y-2 relative">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" class="border-2 border-primary w-full rounded-md p-3 outline-none" required>
+                <button
+                type="button"
+                class="absolute right-0 px-5 py-3"
+                id="password-visibility1"
+              >
+                <small id="visibility-text1">show</small>
+              </button>
+            </div>
+            
+
+            <button type="submit" class="bg-primary p-3 rounded-md w-full font-medium text-white text-xl">Login</button>
+            <a href="{% url 'forgot_password' %}" class="text-primary text-xl">Forgot password?</a>
+            {% for message in messages %}
+            <p class="text-red-500 text-xl">{{message}}</p>
+            {% endfor %}
+            <p class="text-xl">Don't have an account?
+              {% if auth == 'admin' %}
+               <a href="{% url 'admin_signup' %}" class="text-primary">Signup Admin</a>
+               {% else %}
+               <a href="{% url 'signup' %}" class="text-primary">Signup</a>
+               {% endif %}
+            </p>
+            
+        </form>
+        
+    </div>
+    
+</body>
+{% load static %}
+  <script src="{% static 'js/authenticate.js' %}"></script>
+</html>

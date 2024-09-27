@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search</title>
+    {% include 'tailwind.html' %}
+  </head>
+  <body class="bg-slate-100 flex flex-col">
+    {% include 'navbar.html' %}
+
+    <div class="space-y-5 p-3 bg-slate-100 md:w-2/3 md:self-center">
+      <h1 class="text-primary mt-20 text-4xl font-extrabold">
+        {{page|capfirst}}
+      </h1>
+      <form action="" class="flex grow">
+        <input
+          type="text"
+          name="q"
+          id="q"
+          value="{{q|cut:' '}}"
+          placeholder="Search"
+          class="p-3 rounded-l-lg outline-none text-xl"
+          required
+        />
+        <hr />
+        <button type="submit" class="px-2 rounded-r-lg bg-slate-50">
+          <i class="fa-solid fa-magnifying-glass right-0 text-2xl"></i>
+        </button>
+      </form>
+
+      {% if section == 'posts' %}
+      <div class="grid grid-cols-2 gap-2 text-center text-lg ">
+        <a href="{% url 'search_posts' q %}" class="w-full shadow-md p-3 bg-primary text-white " >Posts</a>
+        <a href="{% url 'search_people' q %}" class="w-full shadow-md p-3 text-primary bg-slate-50">People</a>
+      </div>
+
+      {% if q != ' ' %}
+      <h3 class="text-2xl">Results for "{{q|cut:' '}}" in posts</h3>
+      {% endif %} 
+      {% for post in posts %}
+      <div class="shadow-md p-5 bg-white">
+        <div class="flex space-x-2 py-2 items-center w-fit">
+          <a href="{% url 'profile' post.user.id %}">
+            <img
+              src="{{post.user.image.url}}"
+              alt=""
+              class="w-14 h-14 rounded-full border-2 border-primary"
+            />
+          </a>
+          <div>
+            <a href="{% url 'profile' post.user.id %}">
+              <h5 class="font-medium text-xl text-primary">
+                {{post.user.username|capfirst}}
+              </h5>
+            </a>
+            <small class="font-bold opacity-30"
+              >{{post.created|timesince}} ago</small
+            >
+          </div>
+        </div>
+        <hr />
+
+        <p class="select-all text-truncate overflow-hidden" id="post-text">
+          {{post.text}}
+        </p>
+        {% if post.text|length > 80 %}
+        <button id="see-more" class="opacity-30">see more</button>
+        {% endif %}
+        <div class="gap-2 w-full flex overflow-scroll">
+          {% if post.images.all.count > 0 %} {% for image in post.images.all %}
+          <img src="{{image.image.url}}" alt="" class="w-fit h-60" />
+          {% endfor %} {% endif %} {% if post.video %}
+          <video controls class="w-fit h-60">
+            <source src="{{post.video.url}}" type="video/mp4" />
+          </video>
+          {% endif %}
+        </div>
+        <div class="flex gap-5 text-xl text-slate-500 py-3">
+          {% if post in likes %}
+          <a
+            href="{% url 'unlike' post.id %}"
+            class="px-2 py-1 bg-slate-100 rounded-lg w-1/2 text-center"
+          >
+            <button>
+              {{post.like}}
+              <i class="fa-solid fa-face-grin text-primary"></i>
+            </button>
+          </a>
+
+          {% else %}
+          <a
+            href="{% url 'like' post.id %}"
+            class="px-2 py-1 bg-slate-100 rounded-lg w-1/2 text-center"
+          >
+            <button>
+              {{post.like}}
+              <i class="fa-regular fa-face-grin text-primary"></i>
+            </button>
+          </a>
+          {% endif %}
+          <a
+            href="{% url 'post' post.id %}"
+            class="px-2 py-1 bg-slate-100 rounded-lg w-1/2 text-center"
+          >
+            <button>
+              {{post.comment}}
+              <i class="fa-regular fa-comment fa-flip-horizontal"></i>
+            </button>
+          </a>
+        </div>
+
+        {% if post.user == request.user or request.user.is_staff %}
+        <a href="{% url 'delete_post' post.id %}">delete</a>
+        <a href="{% url 'edit_post' post.id %}">Edit</a>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      {% else %}
+      <div class="grid grid-cols-2 gap-2 text-center text-lg ">
+        <a href="{% url 'search_posts' q %}" class="w-full shadow-md p-3 text-primary bg-slate-50 " >Posts</a>
+        <a href="{% url 'search_people' q %}" class="w-full shadow-md p-3 bg-primary text-white">People</a>
+      </div>
+
+      {% if q != ' ' %}
+      <h3 class="text-2xl">Results for "{{q|cut:' '}}" in users</h3>
+      {% endif %} 
+      <div class="flex flex-col w-full sm:grid md:grid-cols-3 sm:grid-cols-2 gap-4 ">
+        {% for user in users %}
+        <div class="rounded-lg text-slate-700 w-full my-3 flex flex-col gap-3 text-xl ">
+            <a href="{% url 'profile' user.id %}" class="w-full">
+                <img src="{{user.image.url}}" alt="{{user.username}}" class="w-full h-80">
+                <h1 class="text-2xl font-medium ">{{user.username|capfirst}}</h1>
+            </a>
+            {% if request.user != user %}
+            {% if user in followings %}
+            <a href="{% url 'unfollow' user.id %}" class="w-full shadow-md p-3 bg-primary text-white text-center">Unfollow &nbsp
+                <i class="fa-regular fa-square-check"></i>
+            </a>
+            {% elif user in followers %}
+
+            <a href="{% url 'follow' user.id %}" class="w-full shadow-md p-3 text-primary bg-white text-center">Follow back &nbsp
+                <i class="fa-regular fa-square-plus"></i>
+            </a>
+
+            {% else %}
+            <a href="{% url 'follow' user.id %}" class="w-full shadow-md p-3 text-primary bg-white text-center">Follow &nbsp
+                <i class="fa-regular fa-square-plus"></i>
+            </a>
+            {% endif %}
+            {% else %}
+            <a href="{% url 'profile' user.id %}" class="w-full shadow-md p-3 text-primary bg-white text-center">You
+               
+            </a>
+            {% endif %}
+
+            
+        </div>
+        {% endfor %}
+      </div>
+
+      {% endif %}
+
+      <!-- npx tailwindcss -i ./src/input.css -o ./src/output.css --watch -->
+    </div>
+
+    <script
+      src="https://kit.fontawesome.com/bef6373e3c.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+
+  {% load static %}
+  <script src="{% static 'js/post.js' %}"></script>
+</html>

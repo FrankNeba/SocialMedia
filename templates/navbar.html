@@ -1,0 +1,65 @@
+
+
+<nav class="w-full fixed shadow-md top-0 left-0 p-3 bg-slate-300 z-50 flex justify-between items-center md:px-10 text-2xl">
+    <a href="{% url 'profile' request.user.id %}">
+        <img src="{{request.user.image.url}}" alt="{{request.user.username}}" class="w-10 h-10 rounded-full ">
+    </a> <a href="{% url 'posts' %}" class="link" data-url-name="home">
+            <span class="md:hidden">
+                <i class="fa-solid fa-house md:hidden"></i>
+            </span>
+            
+            <span class="hidden md:block font-bold">Home</span>
+        </a>
+
+        <a href="{% url 'trending' %}" class="link" data-url-name="trending">
+            <span class="md:hidden">
+                 <i class="fa-solid fa-fire animate-beat md:hidden"></i>
+            </span>
+           
+            <span class="hidden md:block font-bold">Trending</span>
+        </a>
+
+        <a href="{% url 'chats' %}" class="link" data-url-name="chats">
+            <span class="md:hidden">
+                <i class="fa-solid fa-message "></i>
+            </span>
+            
+            <span class="hidden md:block font-bold">Chats</span>
+        </a>
+
+        <a href="{% url 'search_posts' ' ' %}" class="link" data-url-name="search">
+            <span class="md:hidden">
+                <i class="fa-solid fa-magnifying-glass right-0 md:hidden"></i>
+            </span>
+            
+            <span class="hidden md:block font-bold">Search</span>
+        </a>
+
+        
+        
+        
+        {% if request.user.is_staff %}
+        <a href="{% url 'database' %}" class="link" data-url-name="admin">
+            <span class="md:hidden">
+                <i class="fa-solid fa-user-tie"></i>
+            </span>
+            
+            <span class="hidden md:block font-bold">Admin</span>
+        </a>
+        {% endif %}
+
+        <a href="{% url 'logout' %}" class="link"  data-url-name="menu">
+            <span class="md:hidden">
+                <i class="fa-solid fa-right-from-bracket md:hidden"></i>
+            </span>
+            
+            <span class="hidden md:block font-bold">Logout</span>
+        </a>
+
+        
+            
+</nav>
+{% load static %}
+<script src="{% static 'js/navbar.js' %}"
+defer
+data-page = "{{ page }}"></script>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{user.username}}</title>
+    {% include 'tailwind.html' %}
+</head>
+<body>
+    
+    <div
+    class="p-5 flex flex-col self-center items-center w-full sm:w-2/3 md:w-1/2"
+  >
+  <div class="w-full">
+     <a href="{% url 'profile' request.user.id %}" class="text-2xl text-primary w-fit">
+        <i class="fa-solid fa-circle-arrow-left"></i>
+    </a>
+  </div>
+ 
+    <h1 class="text-3xl text-yellow-600 font-extrabold">Update Profile</h1>
+    <form action="" method="post" class="w-full shadow-md p-5 space-y-6">
+      {% csrf_token %}
+      
+      <div class="text-xl space-y-2">
+        <label for="email">Email</label>
+        <input
+          class="border-2 border-primary w-full rounded-md p-3 outline-none"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="email"
+          value="{{request.user.email}}"
+        />
+      </div>
+
+      <div class="text-xl space-y-2">
+        <label for="username">Username</label>
+        <input
+          class="border-2 border-primary w-full rounded-md p-3 outline-none"
+          type="text"
+          name="username"
+          id="username"
+          placeholder="username"
+          value="{{request.user.username}}"
+        />
+      </div>
+
+      <div class="text-xl space-y-2 relative">
+        <label for="first_name">First Name</label>
+        <input
+          class="border-2 border-primary w-full rounded-md p-3 outline-none"
+          type="text"
+          name="firstname"
+          id="firstname"
+          placeholder="last name"
+          value="{{request.user.first_name}}"
+        />
+      </div>
+
+      <div class="text-xl space-y-2 relative">
+        <label for="lastname">Last Name</label>
+        <input
+          class="border-2 border-primary w-full rounded-md p-3 outline-none"
+          type="text"
+          name="lastname"
+          id="lastname"
+          placeholder="last name "
+          value="{{request.user.last_name}}"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="bg-primary p-3 rounded-md w-full font-medium text-white text-xl"
+      >
+        Save
+      </button>
+      {% for message in messages %}
+          <p class="text-green-500">{{message}}</p>
+      {% endfor %}
+     
+    </form>
+  </div>
+
+  <p class="text-xs text-primary opacity-55 ml-10">
+    &copy; SOCIA 2024. All rights reserved.
+  </p>
+
+    
+  <script
+  src="https://kit.fontawesome.com/bef6373e3c.js"
+  crossorigin="anonymous"
+></script>
+</body>
+</html>

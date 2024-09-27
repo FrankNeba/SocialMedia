@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify account</title>
+    {% include 'tailwind.html' %}
+</head>
+<body class="bg-slate-100 flex flex-col text-slate-600 justify-between min-h-[100vh] ">
+    <div
+      class="p-5 flex flex-col self-center items-center w-full sm:w-2/3 md:w-1/2"
+    >
+
+    <h1 class="text-3xl text-yellow-600 font-extrabold">{{page}}</h1>
+
+    <form action="" method="post" class="w-full shadow-md p-5 space-y-6">
+       {% csrf_token %}
+       <div class="text-xl space-y-2">
+        <label for="code">Code</label>
+        <input type="number" id="code" name="code" class="border-2 border-primary w-full rounded-md p-3 outline-none" required>
+       </div>
+       <button type="submit" class="bg-primary p-3 rounded-md w-full font-medium text-white text-xl">Verify</button>
+        {% for message in messages %}
+            <p class="text-red-500">{{message}}</p>
+        {% endfor %}
+       
+    </form>
+
+    </div>
+   
+</body>
+</html>
