@@ -8,6 +8,14 @@ from django.contrib import messages
 from django.core.mail import send_mail
 import random
 
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+
+from .tokens import account_activation_token
 def mail(message, subject, recipient):
     send_mail(
         subject = subject,
@@ -22,6 +30,47 @@ def home(request):
     if request.user.is_authenticated:
         return redirect('posts')
     return render(request, 'authenticate/index.html')
+
+def activateEmail(request, user, to_email):
+    messages.error(request, 'before emailmessage')
+    mail_subject = 'Activate your user account.'
+    messages.error(request, 'After mailsubject')
+    message = render_to_string('authenticate/template_activate_account.html', {
+        'user': user.username,
+        'domain': get_current_site(request).domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.id)),
+        'token': account_activation_token.make_token(user),
+        'protocol': 'https' if request.is_secure() else 'http'
+    })
+    messages.error(request, 'After message')
+    
+    email = EmailMessage(mail_subject, message, to=[to_email])
+    try:
+        if email.send():
+            messages.success(request, f'Hi {user}, please check your email {to_email} for the activation link. Note: Check your spam folder.')
+        else:
+            messages.error(request, f'Problem sending confirmation email to {to_email}. Check if you typed it correctly.')
+    except Exception as e:
+        messages.error(request, f'Email sending failed: {str(e)}')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(id=uid)
+    except:
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+
+        messages.success(request, 'Your have successfully verified your email. Now you can login your account.')
+        return redirect('login')
+    else:
+        messages.error(request, 'Activation link is invalid!')
+    
+    return redirect('home')
 
 
 def signup(request):
@@ -47,16 +96,14 @@ def signup(request):
             # messages.error(request, 'Password can easily be guessed')
 
         else: 
-            code = random.randint(11111, 99999)
             user = User(username=username, email=email, password = make_password(password))
-            user.code = code
             user.is_active = False
-            message = f'Hello {username},\nYour Socia account verification code is {code}'
-            subject = f'Account Verifcation'
-            try: 
-                mail(message=message, subject=subject, recipient=user.email)
+            # "user.is_active=False", meaning a user cannot log in until the email is verified.
+            try:
                 user.save()
-                return redirect('account_verification', pk=user.id)
+                activateEmail(request, user, email)
+                # mail(subject='okay', message='yooo', recipient=email)
+               
             except:
                 messages.error(request, 'Check your internet connection')
         
@@ -146,7 +193,7 @@ def resetPasswordCode(request,pk):
     context = {'page':page}
     return render(request, 'authenticate/accountActivation.html', context)
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def resetPassword(request, pk):
     if request.method == 'POST':
         password = request.POST['password']
