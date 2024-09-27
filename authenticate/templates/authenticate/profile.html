@@ -75,6 +75,14 @@
               <i class="fa-regular fa-square-plus"></i>
             </a>
             {% endif %}
+            {% if user != request.user %}
+            <a
+              href="{% url 'chat' user.id %}"
+              class="w-1/2 shadow-md p-3 bg-primary text-white rounded-lg flex justify-center items-center"
+              >Message &nbsp
+              <i class="fa-regular fa-square-check"></i>
+            </a>
+            {% endif %}
           </div>
           {% endif %}
         </div>
