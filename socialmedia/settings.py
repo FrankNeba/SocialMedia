@@ -31,8 +31,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
-    'channels',
+    # 'daphne',
+    # 'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -75,11 +75,10 @@ TEMPLATES = [
 ]
 
 # WSGI_APPLICATION = 'socialmedia.wsgi.application'
-ASGI_APPLICATION = 'socialmedia.asgi.application'
+# ASGI_APPLICATION = 'socialmedia.asgi.application'
 CHANNEL_LAYERS = {
     'default': {'BACKEND': 'channels.layers.InMemoryChannelLayer'},
 }
-
 
 
 AUTH_USER_MODEL = 'authenticate.User'

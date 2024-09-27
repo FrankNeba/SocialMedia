@@ -144,20 +144,26 @@ def post(request,pk):
 @login_required(login_url='home')
 def like(request, pk):
     post = Post.objects.get(id=pk)
-    post.like += 1
-    post.save()
-    liked = Like(user = request.user, post = post)
-    liked.save()
+    try: 
+        Like.objects.get(post = post, user = request.user)
+    except: 
+        post.like += 1
+        post.save()
+        liked = Like(user = request.user, post = post)
+        liked.save()
     return redirect(request.META.get('HTTP_REFERER'))
     # return HttpResponseRedirect(request.path)
 
 @login_required(login_url='home')
 def unlike(request,pk):
     post = Post.objects.get(id = pk)
-    like = Like.objects.get(post__id = pk , user = request.user)
-    post.like -= 1
-    post.save()
-    like.delete()
+    try:
+        like = Like.objects.get(post__id = pk , user = request.user)
+        post.like -= 1
+        post.save()
+        like.delete()
+    except:
+        pass
     return redirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url='home')
