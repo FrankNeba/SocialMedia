@@ -15,5 +15,5 @@ urlpatterns = [
     path('profile/<str:pk>', views.profile, name='profile'),
     path('follow/<str:pk>', views.follow, name='follow'),
     path('unfollow/<str:pk>', views.unfollow, name='unfollow'),
-
+    path('activate/<uidb64>/<token>', views.activate, name='activate'),
 ]
