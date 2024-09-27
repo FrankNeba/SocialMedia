@@ -146,7 +146,7 @@ def resetPasswordCode(request,pk):
     context = {'page':page}
     return render(request, 'authenticate/accountActivation.html', context)
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def resetPassword(request, pk):
     if request.method == 'POST':
         password = request.POST['password']
