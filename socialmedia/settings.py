@@ -74,12 +74,11 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'socialmedia.wsgi.application'
+WSGI_APPLICATION = 'socialmedia.wsgi.application'
 ASGI_APPLICATION = 'socialmedia.asgi.application'
 CHANNEL_LAYERS = {
     'default': {'BACKEND': 'channels.layers.InMemoryChannelLayer'},
 }
-
 
 
 AUTH_USER_MODEL = 'authenticate.User'

@@ -22,7 +22,8 @@ def chats(request):
                 chats.pop(message.sender)
             except:
                 chats[message.receiver]=message
-    # chats = dict(sorted(list(chats.items())), key = lambda x : x[1].created)
+    chats = list(chats)
+    chats.sort( key = lambda x : x[1].created)
 
     context = { 'chats':chats,'page':page}
     return render(request, 'message/chats.html', context)
