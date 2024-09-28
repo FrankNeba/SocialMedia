@@ -101,7 +101,7 @@
          <div>
             <h4 class="text-2xl font-bold space-y-3">Comments</h4>
                 {% for comment in comments %}
-                <div class="flex space-x-2 py-2 items-start w-fit  ">
+                <div class="flex space-x-2 py-2 items-start w-fit max-w-full  ">
                     <a href="{% url 'profile' comment.user.id %}" class="w-20">
                       <img
                         src="{{comment.user.image.url}}"

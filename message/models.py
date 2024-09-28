@@ -10,6 +10,7 @@ class Message(models.Model):
     video = models.FileField(null=True, blank=True, upload_to='video/messages')
     created = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
+    idd = models.PositiveIntegerField(default = 0)
 
     class Meta:
         ordering = ['created']

@@ -80,8 +80,8 @@
                 JSON.stringify({
                     'message':message,
                     'room_name':'{{room_name}}',
-                    'sender':'{{request.user}}',
-                    'receiver':'{{user}}',
+                    'sender':'{{request.user.id}}',
+                    'receiver':'{{user.id}}',
                     'id':id,
                 })
             )
@@ -124,7 +124,7 @@
             date = new Date()
             time = date.getHours >= 12? `${date.getHours()}:${date.getMinutes()} p.m.` : date.getMinutes() > 9? `${date.getHours()}:${date.getMinutes()} a.m.`: `${date.getHours()}:0${date.getMinutes()} a.m.`
             var msg = document.getElementById('message-block')
-            if (sender == '{{user}}') {
+            if (sender == '{{user.id}}') {
                 msg.innerHTML +=  `
                     <div class="max-w-[70%] w-fit flex-wrap border p-3 bg-yellow-400 rounded-r-3xl rounded-tl-3xl">
                         <p>${text}</p>

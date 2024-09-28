@@ -22,8 +22,9 @@ def chats(request):
                 chats.pop(message.sender)
             except:
                 chats[message.receiver]=message
-    chats = list(chats)
-    chats.sort( key = lambda x : x[1].created)
+    chats = [[key,value] for key,value in chats.items()]
+    print(chats)
+    chats.sort( key = lambda x : x[1].created, reverse=True)
 
     chats = dict(chats)
 
@@ -46,10 +47,10 @@ def chat(request, pk):
     
     room_name = Message.getRoomName(user, request.user)
     try:
-        id = messages[-1].id
+        id = messages[-1].idd
     except:   
 
-        id = 0
+        id = 1
     
     context = {'messages':messages,'user':user, 'room_name':room_name,'id':id}
     return render(request, 'message/chat.html', context)

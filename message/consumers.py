@@ -30,6 +30,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     async def send_message(self, event):
         data = event['message']
+        
         await self.create_message(data= data)
         response = {
             'sender':data['sender'],
@@ -43,10 +44,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def create_message(self, data):
         # get_room_name = Message.getRoomName(data['sender'], data['receiver'])
-        if not Message.objects.filter(id = str(data['id'])).exists():
-            sender = User.objects.get(email = data['sender'])
-            receiver = User.objects.get(email = data['receiver'])
-            new_message = Message(text = data['message'], sender=sender, receiver = receiver)
+        print('here')
+        if not Message.objects.filter(idd = data['id'], sender__id = data['sender'],receiver__id = data['receiver'] ).exists():
+            print('there')
+            sender = User.objects.get(id = data['sender'])
+            receiver = User.objects.get(id = data['receiver'])
+            idd = data['id']
+            new_message = Message(text = data['message'], sender=sender, receiver = receiver, idd = idd)
             new_message.save()
+            
 
             

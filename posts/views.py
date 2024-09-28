@@ -158,7 +158,7 @@ def like(request, pk):
 def unlike(request,pk):
     post = Post.objects.get(id = pk)
     try:
-        like = Like.objects.get(post__id = pk , user = request.user)
+        like = Like.objects.get(post = post , user = request.user)
         post.like -= 1
         post.save()
         like.delete()

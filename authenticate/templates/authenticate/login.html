@@ -11,6 +11,9 @@
       class="p-5 flex flex-col self-center items-center w-full sm:w-2/3 md:w-1/2"
     >
         <h1 class="text-3xl text-yellow-600 font-extrabold">Login</h1>
+        {% for message in messages %}
+            <p class="text-red-500 text-xl font-medium">{{message}}</p>
+        {% endfor %}
         <form action="" method="post" class="w-full shadow-md p-5 space-y-6">
             {% csrf_token %}
 
@@ -35,9 +38,7 @@
 
             <button type="submit" class="bg-primary p-3 rounded-md w-full font-medium text-white text-xl">Login</button>
             <a href="{% url 'forgot_password' %}" class="text-primary text-xl">Forgot password?</a>
-            {% for message in messages %}
-            <p class="text-red-500 text-xl">{{message}}</p>
-            {% endfor %}
+            
             <p class="text-xl">Don't have an account?
               {% if auth == 'admin' %}
                <a href="{% url 'admin_signup' %}" class="text-primary">Signup Admin</a>
