@@ -151,7 +151,7 @@ def like(request, pk):
         post.save()
         liked = Like(user = request.user, post = post)
         liked.save()
-    return redirect(request.META.get('HTTP_REFERER'))
+    return redirect(f'{request.META.get("HTTP_REFERER")}#post{post.id}')
     # return HttpResponseRedirect(request.path)
 
 @login_required(login_url='home')
@@ -164,7 +164,7 @@ def unlike(request,pk):
         like.delete()
     except:
         pass
-    return redirect(request.META.get('HTTP_REFERER'))
+    return redirect(f'{request.META.get("HTTP_REFERER")}#post{post.id}')
 
 @login_required(login_url='home')
 def deletePost(request, pk):

@@ -27,7 +27,7 @@
             </button>
         </a>
       {% for post in posts %}
-      <div class="shadow-md p-5 bg-white">
+      <div class="shadow-md p-5 bg-white" id = 'post{{post.id}}'>
         <div class="flex space-x-2 py-2 items-center w-fit">
           <a href="{% url 'profile' post.user.id %}">
             <img
@@ -54,7 +54,8 @@
         <button id="see-more" class=" opacity-30">see more</button>
         {% endif %}
         <div class=" gap-2 w-full flex overflow-scroll">
-          {% if post.images.all.count > 0 %} {% for image in post.images.all %}
+          {% if post.images.all.count > 0 %} 
+          {% for image in post.images.all %}
           <img src="{{image.image.url}}" alt="" class="w-fit h-60" />
           {% endfor %}
            {% endif %}

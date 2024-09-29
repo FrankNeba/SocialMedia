@@ -11,13 +11,15 @@
         <a href="{% url 'chats'  %}" class="text-2xl text-primary w-fit m-5">
            <i class="fa-solid fa-circle-arrow-left"></i>
        </a>
-       <img src="{{user.image.url}}" alt="" class="w-14 h-14 rounded-full">
+       <a href="{% url 'profile' user.id %}">
+        <img src="{{user.image.url}}" alt="" class="w-14 h-14 rounded-full">
+       </a>
        <h1 class="text-2xl font-semibold">{{user.username|capfirst}}</h1>
      </div>
     <div class="w-full md:w-2/3 p-10 flex flex-col self-center mt-20 space-y-3 pb-40" id="message-block">
         {% for message in messages %}
             {% if message.sender != request.user %}
-                <div class="max-w-[70%] w-fit flex-wrap border p-3 bg-yellow-400 rounded-r-3xl rounded-tl-3xl ">
+                <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-yellow-400 rounded-r-3xl rounded-tl-3xl ">
                     <p class="">{{message.text}} </p>
                     <small>{{message.created|time}}</small>
 
@@ -25,7 +27,7 @@
 
             {% else %}
                 <div class="w-full flex justify-end">
-                    <div class="max-w-[70%] w-fit flex-wrap border p-3 bg-primary rounded-l-3xl rounded-tr-3xl ">
+                    <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-primary rounded-l-3xl rounded-tr-3xl ">
                         <p class="">{{message.text}} </p>
                         <small>{{message.created|time}}</small>
                     </div>
@@ -126,14 +128,14 @@
             var msg = document.getElementById('message-block')
             if (sender == '{{user.id}}') {
                 msg.innerHTML +=  `
-                    <div class="max-w-[70%] w-fit flex-wrap border p-3 bg-yellow-400 rounded-r-3xl rounded-tl-3xl">
+                    <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-yellow-400 rounded-r-3xl rounded-tl-3xl">
                         <p>${text}</p>
                         <small>${time}</small>
                     </div>`}
             else {
                 msg.innerHTML +=  `
                     <div class="w-full flex justify-end">
-                        <div class="max-w-[70%] w-fit flex-wrap border p-3 bg-primary rounded-l-3xl rounded-tr-3xl">
+                        <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-primary rounded-l-3xl rounded-tr-3xl">
                             <p>${text}</p>
                             <small>${time}</small>
                         </div>

@@ -41,7 +41,6 @@ def activateEmail(request, user, to_email):
         'token': account_activation_token.make_token(user),
         'protocol': 'https' if request.is_secure() else 'http'
     })
-    messages.error(request, 'After message')
     
     email = EmailMessage(mail_subject, message, to=[to_email])
     try:
