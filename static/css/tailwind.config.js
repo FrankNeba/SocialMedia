@@ -5,7 +5,6 @@ module.exports = {
     "../../posts/templates/posts/**/*.{html,js}",
     "../../authenticate/templates/authenticate/**/*.{html,js}",
     "../../adminpanel/templates/adminpanel/**/*.{html,js}",
-    "../../message/templates/message/**/*.{html,js}",
   ],
   theme: {
     extend: {
@@ -15,7 +14,7 @@ module.exports = {
       keyframes: {
         beat: {
           '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.5)' },
+          '50%': { transform: 'scale(1.1)' },
         },
       },
       animation: {

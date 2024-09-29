@@ -13,6 +13,7 @@
       class="space-y-5 p-3 bg-slate-100 md:w-2/3 md:self-center mt-20 relative"
     >
       <div class="shadow-md p-5 bg-white pb-48">
+        <a href="{% url 'post' comment.post.id %}" class="text-primary text-xl"> view post</a>
         <h1 class="text-3xl font-bold">Comment</h1>
         <div class="flex space-x-2 py-2 items-start w-fit  ">
             <a href="{% url 'profile' comment.user.id %}" class="w-20">

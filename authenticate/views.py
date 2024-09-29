@@ -32,9 +32,8 @@ def home(request):
     return render(request, 'authenticate/index.html')
 
 def activateEmail(request, user, to_email):
-    messages.error(request, 'before emailmessage')
+    
     mail_subject = 'Activate your user account.'
-    messages.error(request, 'After mailsubject')
     message = render_to_string('authenticate/template_activate_account.html', {
         'user': user.username,
         'domain': get_current_site(request).domain,
@@ -42,7 +41,6 @@ def activateEmail(request, user, to_email):
         'token': account_activation_token.make_token(user),
         'protocol': 'https' if request.is_secure() else 'http'
     })
-    messages.error(request, 'After message')
     
     email = EmailMessage(mail_subject, message, to=[to_email])
     try:
@@ -243,8 +241,15 @@ def profile(request, pk):
     myfollowers = [follower.follower for follower in myfollowers]
     myfollowings = Follower.objects.filter(follower = request.user)
     myfollowings = [following.user for following in myfollowings]
+    likes = []
+    try:
+        likes = Like.objects.filter(user = request.user)
+    except:
+        pass
+    likedPosts = [like.post for like in likes]
+    posts = posts[:100]
 
-    context = {'user':user,'posts':posts,'followers':followers, 'myfollowings': myfollowings, 'myfollowers':myfollowers, 'followings': followings}
+    context = {'user':user,'posts':posts,'followers':followers, 'myfollowings': myfollowings, 'myfollowers':myfollowers, 'followings': followings,'likes': likedPosts}
     return render(request, 'authenticate/profile.html', context)
 
 

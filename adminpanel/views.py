@@ -285,7 +285,7 @@ def siteReplies(request):
         for id in delete:
             reply = Reply.objects.get(id = id)
             reply.delete()
-        return redirect('adminposts')
+        
     
     context = {'replies':replies, 'page':page,'q':q}
     return render(request, 'adminpanel/replies.html', context)

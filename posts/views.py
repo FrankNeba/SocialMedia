@@ -151,20 +151,20 @@ def like(request, pk):
         post.save()
         liked = Like(user = request.user, post = post)
         liked.save()
-    return redirect(request.META.get('HTTP_REFERER'))
+    return redirect(f'{request.META.get("HTTP_REFERER")}#post{post.id}')
     # return HttpResponseRedirect(request.path)
 
 @login_required(login_url='home')
 def unlike(request,pk):
     post = Post.objects.get(id = pk)
     try:
-        like = Like.objects.get(post__id = pk , user = request.user)
+        like = Like.objects.get(post = post , user = request.user)
         post.like -= 1
         post.save()
         like.delete()
     except:
         pass
-    return redirect(request.META.get('HTTP_REFERER'))
+    return redirect(f'{request.META.get("HTTP_REFERER")}#post{post.id}')
 
 @login_required(login_url='home')
 def deletePost(request, pk):
