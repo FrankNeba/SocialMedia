@@ -1,2 +1,2 @@
-web: daphne -b 0.0.0.0 -p $PORT socialmedia.asgi:application
+web: daphne socialmedia.asgi:application -b 0.0.0.0 -p $PORT 
 

@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 # CSRF_TRUSTED_ORIGINS = ['https://socialmedia-production-14f4.up.railway.app']
-# CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://socialmedia-1-solq.onrender.com']
 
 
 # Application definition
@@ -98,7 +98,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('redis://default:ZQaUgMrZXyTEoZbGWbaQChfuXyZiHWIP@redis-fxhu.railway.internal:6379')],
+            "hosts": [('redis://red-cs59vfdumphs73aqsv10:6379')],
         },
     },
 }
@@ -106,6 +106,8 @@ CHANNEL_LAYERS = {
 
 
 AUTH_USER_MODEL = 'authenticate.User'
+
+
 
 
 # Database
