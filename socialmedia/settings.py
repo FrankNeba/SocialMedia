@@ -96,12 +96,31 @@ AUTH_USER_MODEL = 'authenticate.User'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Check if we are on Heroku or a local environment
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',  # Use PostgreSQL on Heroku
+            'NAME': os.environ['DATABASE_URL'].split('/')[-1],
+            'USER': os.environ['DATABASE_URL'].split(':')[1].split('/')[2],
+            'PASSWORD': os.environ['DATABASE_URL'].split(':')[2].split('@')[0],
+            'HOST': os.environ['DATABASE_URL'].split('@')[1].split(':')[0],
+            'PORT': os.environ['DATABASE_URL'].split(':')[-1],
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),  # Local SQLite file
+        }
+    }
+
 
 
 # Password validation
