@@ -98,7 +98,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('redis://default:aAvKoDUPEHMsvBuaROPeDlhsoHiCoTKg@redis.railway.internal:6379',)],
+            "hosts": [('redis://default:ZQaUgMrZXyTEoZbGWbaQChfuXyZiHWIP@redis-fxhu.railway.internal:6379')],
         },
     },
 }

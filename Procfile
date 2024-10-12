@@ -1,1 +1,1 @@
-web: gunicorn socialmedia.wsgi:application 
+web: daphne -u /tmp/daphne.sock myproject.asgi:application
