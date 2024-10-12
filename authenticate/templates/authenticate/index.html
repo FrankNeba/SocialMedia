@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socia-home</title>
+    {% include 'tailwind.html' %}
+  </head>
+  <body class="text-slate-600 bg-slate-100 ">
+   
+    {% if request.user.is_authenticated %}
+    {% include 'navbar.html' %}
+    <div class="mt-20 p-3">
+      <h1 class="text-4xl text-primary font-medium">Hello {{request.user.username|capfirst}}</h1>
+
+      <img src="{{request.user.image.url}}" alt="{{request.user.image.url}}" />
+      <a href="{% url 'logout' %}">Logout</a>
+      <a href="{%url 'update_profile' %}">Update profile</a>
+      <a href="{% url 'add_post' %}">add post</a>
+    </div>
+    
+    {% else %}
+    <div
+    class="w-full items-center text-center p-3 mt-10 flex flex-col justify-center"
+  >
+    <span class="text-3xl text-yellow-600 font-extrabold text-center"
+      >Welcome to
+    </span>
+    <h1 class="text-primary text-8xl uppercase font-extrabold">socia</h1>
+    <p class="font-medium md:w-1/2 text-xl mt-10 flex-wrap">
+      Connect with millions of people world wide and be updated on recent
+      events
+    </p>
+  </div>
+
+  <div class="w-full text-center font-medium">
+    <h3 class="text-3xl font-extrabold p-5 text-yellow-600"> Get started</h3>
+    <div class="text-xl flex justify-center w-full">
+        <a href="{% url 'signup' %}" class="text-primary">
+        Create an account&nbsp
+      </a>
+    </div>
+    <div class="text-xl flex justify-center">
+      <p>Already a user? &nbsp</p>
+      <a href="{% url 'login' %}" class="text-primary">Login</a>
+    </div>
+    
+    
+  </div>
+    {% endif %} {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor %}
+
+    <p class=" text-xs text-primary absolute bottom-0 opacity-55">&copy; SOCIA 2024. All rights reserved.</p>
+  </body>
+</html>

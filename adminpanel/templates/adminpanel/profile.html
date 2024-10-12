@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{user.username}}</title>
+</head>
+<body>
+    {% include 'posts/navbar.html' %} <br>
+    <img src="{{user.image.url}}" alt="{{user.username}}">
+    {% if user.first_name %}
+    <p>{{user.first_name}}</p>
+    {% endif %}
+    {% if user.last_name %}
+    <p>{{user.last_name}}</p>
+    {% endif %}
+    <p>{{ user.username}}</p>
+
+    {% if request.user == user %}
+    <a href="">Edit profie</a>
+    {% else %}
+    <a href="{% url 'follow' user.id %}">
+        <button>Follow</button>
+    </a>
+
+    <a href="{% url 'unfollow' user.id %}">
+        <button>unFollow</button>
+    </a>
+    {% endif %}
+
+
+    <hr>
+    <h3>{{followers.count}} Followers</h3>
+    {% for follower in followers %}
+    <a href="{% url 'profile' follower.follower.id %}">
+        <img src="{{follower.follower.image.url}}" alt="{{follower.follower.username}}">
+        <h4>{{follower.follower.username}}</h4>
+    </a>
+   {% endfor%}
+
+   <hr>
+   <h3>{{followings.count}} Following</h3>
+   {% for following in followings %}
+   <a href="{% url 'profile' following.user.id %}">
+       <img src="{{following.user.image.url}}" alt="{{following.user.username}}">
+       <h4>{{following.user.username}}</h4>
+   </a>
+  {% endfor%}
+    <hr>
+    
+
+    <h3>Posts</h3>
+    {% for post in posts %}
+        <div>
+            <img src="{{post.user.image.url}}" alt="">
+            <h5>{{post.user.username}}</h5>
+            <p>{{post.created|timesince}} ago</p>
+            <p>{{post.text}}</p>
+            {% for image in post.images.all %}
+            <img src="{{image.image.url}}" alt="">
+            {% endfor %}
+            <p>{{post.like}} likes</p>
+            <a href="{% url 'like' post.id %}">
+                <button>like</button>
+            </a>
+            <a href="{% url 'post' post.id %}">
+                <button>comment</button>
+            </a>
+            <a href="{% url 'unlike' post.id %}">
+                <button>unlike</button>
+            </a>
+        </div><hr>
+        {% endfor %}
+
+</body>
+</html>

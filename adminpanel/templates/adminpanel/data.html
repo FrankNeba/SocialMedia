@@ -1,0 +1,30 @@
+<table class="table-fixed  text-3xl font-medium text-primary border border-slate-300 w-full">
+    <tbody>
+        <tr>
+            <td class="p-3 border border-slate-300">
+                <a href="{%  url 'users' %}">Users</a>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="p-3 border border-slate-300">
+                <a href="{% url 'adminposts' %}">Posts</a>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="p-3 border border-slate-300">
+                <a href="{% url 'admincomments' %}">Comments</a>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td class="p-3 border border-slate-300">
+                <a href="{% url 'adminreplies' %}">Replies</a>
+            </td>
+        </tr>
+
+        
+    </tbody>
+</table>

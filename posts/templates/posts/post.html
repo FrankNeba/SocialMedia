@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>post</title>
+    {% include 'tailwind.html' %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  </head>
+  <body class="bg-slate-100 flex flex-col text-slate-700  ">
+    {% include 'navbar.html' %}
+
+    <div class="space-y-5 p-3 bg-slate-100 md:w-2/3 md:self-center mt-20 relative" id="post{{post.id}}">
+        <div class="shadow-md p-5 bg-white pb-48">
+            <h1 class="text-3xl font-bold">Post</h1>
+          <div class="flex space-x-2 py-2 items-center justify-between w-full">
+            <div class="flex w-full justify-between">
+                <div class="flex gap-3">
+                  <a href="{% url 'profile' post.user.id %}">
+              <img
+                src="{{post.user.image.url}}"
+                alt=""
+                class="w-14 h-14 rounded-full border-2 border-primary"
+              />
+            </a>
+            <div>
+              <a href="{% url 'profile' post.user.id %}">
+                <h5 class="font-medium text-xl text-primary">
+                  {{post.user.username|capfirst}}
+                </h5>
+              </a>
+              <small class="font-bold opacity-30"
+                >{{post.created|timesince}} ago</small
+              >
+            </div>  
+                </div>
+                
+            <div class="flex flex-col relative">
+              <button id="hide" class="hidden">
+                <i class="fa-solid fa-xmark " ></i>
+            </button>
+            <button id="show">
+              <i class="fa-solid fa-ellipsis" ></i>
+          </button>
+                <div class=" flex-col bg-slate-50 p-3 space-y-4 absolute right-0 top-5 hidden" id="menu">
+                    
+                    
+                    {% if  request.user.is_staff %}
+                    <a href="{% url 'delete_post' post.id %}" class="text-red-500" id="menu-delete">Delete</a>
+                    {% endif %}
+                    {% if request.user == post.user %}
+                    <a href="{% url 'edit_post' post.id %}" class="text-primary" id="menu-edit">Edit</a>
+                    {% endif %}
+                </div>
+                
+                
+                
+            </div>
+            </div>
+            
+          </div>
+          <hr />
+  
+          <p class=" select-all text-truncate overflow-hidden" id="post-text">{{post.text}}</p>
+          {% if post.text|length > 80 %}
+          <button id="see-more" class=" opacity-30">see more</button>
+          {% endif %}
+          <div class=" gap-2 w-full flex overflow-scroll">
+            {% if post.images.all.count > 0 %} 
+            {% for image in post.images.all %}
+            <img src="{{image.image.url}}" alt="" class="w-fit h-60" />
+            {% endfor %}
+             {% endif %}
+              {% if post.video %}
+            <video controls class="w-fit h-60">
+              <source src="{{post.video.url}}" type="video/mp4" />
+            </video>
+            {% endif %}
+          </div>
+          <div class="flex gap-5 text-xl text-slate-500 py-3">
+              {% if post in likes %}
+              <a href="{% url 'unlike' post.id %}" class="px-2 py-1 bg-slate-100 rounded-lg w-1/2 text-center">
+                <button>{{post.like}} 
+                  <i class="fa-solid fa-face-grin text-primary"></i>
+                </button>
+              </a>
+      
+              {% else %}
+              <a href="{% url 'like' post.id %}" class="px-2 py-1 bg-slate-100 rounded-lg w-1/2 text-center">
+                <button>{{post.like}} 
+                  <i class="fa-regular fa-face-grin text-primary"></i>
+                </button>
+              </a>
+              {% endif %}
+              <a href="{% url 'post' post.id %}" class="px-2 py-1 bg-slate-100 rounded-lg w-1/2 text-center">
+                <button>{{post.comment}} 
+                  <i class="fa-regular fa-comment fa-flip-horizontal"></i>
+                </button>
+              </a>
+          </div>
+         <div>
+            <h4 class="text-2xl font-bold space-y-3">Comments</h4>
+                {% for comment in comments %}
+                <div class="flex space-x-2 py-2 items-start w-fit max-w-full  ">
+                    <a href="{% url 'profile' comment.user.id %}" class="w-20">
+                      <img
+                        src="{{comment.user.image.url}}"
+                        alt=""
+                        class="w-14 h-14 rounded-full border-2 border-primary"
+                      />
+                    </a>
+                    <div class="w-full bg-slate-50 shadow-md p-2">
+                        <a href="{% url 'profile' comment.user.id %}">
+                          <h5 class="font-medium text-xl text-primary">
+                            {{comment.user.username|capfirst}}
+                          </h5>
+                        </a>
+                        <p class="flex-wrap">{{comment.text}}</p>
+                        <div class="flex gap-3">
+                             <p class="font-bold opacity-30"
+                          >{{comment.created|timesince}} ago</p
+                        >
+                         
+                    
+                            <a href="{% url 'comment' comment.id %}" class="text-primary">reply</a>
+                        
+                        {% if comment.user == request.user or request.user.is_staff%}
+                        <a href="{% url 'delete_comment' comment.id %}" class="text-red-500">
+                            <button>delete</button>
+                        </a>
+                        {% endif %}
+                        </div>
+                       
+                        
+                    </div>
+                  </div>
+                {% endfor %}
+         </div>
+  
+          
+        </div>
+        
+        <!-- npx tailwindcss -i ./src/input.css -o ./src/output.css --watch -->
+    <div class="w-full fixed flex bottom-0 left-0 justify-center p-2">
+        <form action="" method="post" class="w-[98%] bg-slate-50 p-3 rounded-lg flex items-start border-2 border-primary">
+        {% csrf_token %}
+
+       <textarea name="comment" id="text" class="w-[95%] max-h-20 bg-slate-50 outline-none"></textarea>
+       <button type="submit">
+        <i class="fa-regular fa-paper-plane text-primary"></i>
+       </button>
+
+       </form>
+    
+     </div>
+     </div>
+    
+    <script src="https://kit.fontawesome.com/bef6373e3c.js" crossorigin="anonymous"></script>
+</body>
+
+ {% load static %}
+<script src="{% static 'js/post.js' %}"></script>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comment</title>
+    {% include 'tailwind.html' %}
+  </head>
+
+  <body>
+    {% include 'navbar.html' %}
+    <div
+      class="space-y-5 p-3 bg-slate-100 md:w-2/3 md:self-center mt-20 relative"
+    >
+      <div class="shadow-md p-5 bg-white pb-48">
+        <a href="{% url 'post' comment.post.id %}" class="text-primary text-xl"> view post</a>
+        <h1 class="text-3xl font-bold">Comment</h1>
+        <div class="flex space-x-2 py-2 items-start w-fit  ">
+            <a href="{% url 'profile' comment.user.id %}" class="w-20">
+              <img
+                src="{{comment.user.image.url}}"
+                alt=""
+                class="w-14 h-14 rounded-full border-2 border-primary"
+              />
+            </a>
+            <div class="w-full bg-slate-50 shadow-md p-2">
+                <a href="{% url 'profile' comment.user.id %}">
+                  <h5 class="font-medium text-xl text-primary">
+                    {{comment.user.username|capfirst}}
+                  </h5>
+                </a>
+                <p class="flex-wrap">{{comment.text}}</p>
+                <div class="flex gap-3">
+                     <p class="font-bold opacity-30"
+                  >{{comment.created|timesince}} ago</p
+                >
+                 
+                {% if comment.user == request.user or request.user.is_staff%}
+                <a href="{% url 'delete_comment' comment.id %}" class="text-red-500">
+                    <button>delete</button>
+                </a>
+                {% endif %}
+                </div>
+               
+                
+            </div>
+          </div>
+
+        
+        
+        <div>
+          <h4 class="text-2xl font-bold space-y-3 mt-10">{{replies.count}} Replies</h4>
+          {% for reply in replies %}
+          <div class="flex space-x-2 py-2 items-start w-fit">
+            <a href="{% url 'profile' reply.user.id %}" class="w-20">
+              <img
+                src="{{reply.user.image.url}}"
+                alt=""
+                class="w-14 h-14 rounded-full border-2 border-primary"
+              />
+            </a>
+            <div class="w-full bg-slate-50 shadow-md p-2">
+              <a href="{% url 'profile' reply.user.id %}">
+                <h5 class="font-medium text-xl text-primary">
+                  {{reply.user.username|capfirst}}
+                </h5>
+              </a>
+              <p class="flex-wrap">{{reply.text}}</p>
+              <div class="flex gap-3">
+                <p class="font-bold opacity-30">
+                  {{reply.created|timesince}} ago
+                </p>
+
+                
+
+                {% if reply.user == request.user or request.user.is_staff%}
+                <a
+                  href="{% url 'delete_comment' comment.id %}"
+                  class="text-red-500"
+                >
+                  <button>delete</button>
+                </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <!-- npx tailwindcss -i ./src/input.css -o ./src/output.css --watch -->
+      <div class="w-full fixed flex bottom-0 left-0 justify-center p-2">
+        <form
+          action=""
+          method="post"
+          class="w-[98%] bg-slate-50 p-3 rounded-lg flex items-start border-2 border-primary"
+        >
+          {% csrf_token %}
+
+          <textarea
+            name="text"
+            id="text"
+            class="w-[95%] max-h-20 bg-slate-50 outline-none"
+          ></textarea>
+          <button type="submit">
+            <i class="fa-regular fa-paper-plane text-primary"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    <script
+      src="https://kit.fontawesome.com/bef6373e3c.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
