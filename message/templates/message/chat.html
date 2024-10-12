@@ -91,7 +91,7 @@
         }
 
         const websocketProtocol = window.location.protocol === 'https:'? 'wss': 'ws'
-        const wsEndpoint = `${websocketProtocol}://${window.location.host}/${websocketProtocol}/notifications/{{room_name}}/`
+        const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/notifications/{{room_name}}/`
         const socket = new WebSocket(wsEndpoint)
         
 
