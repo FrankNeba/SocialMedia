@@ -80,14 +80,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'socialmedia.wsgi.application'
 ASGI_APPLICATION = 'socialmedia.asgi.application'
+# settings.py
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://:aAvKoDUPEHMsvBuaROPeDlhsoHiCoTKg@redis.railway.internal:6379/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
+            "hosts": [('redis://:aAvKoDUPEHMsvBuaROPeDlhsoHiCoTKg@redis.railway.internal:6379',)],
         },
     },
 }
+
 
 
 AUTH_USER_MODEL = 'authenticate.User'
