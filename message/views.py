@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from .models import *
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required(login_url="login")
 def chats(request):
     user = request.user
     page = 'chats'
@@ -32,6 +34,8 @@ def chats(request):
     context = { 'chats':chats,'page':page}
     return render(request, 'message/chats.html', context)
 
+
+@login_required(login_url="login")
 def chat(request, pk):
     user = User.objects.get(id = pk)
     if request.method == 'POST':
