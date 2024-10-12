@@ -81,24 +81,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'socialmedia.wsgi.application'
 ASGI_APPLICATION = 'socialmedia.asgi.application'
 # settings.py
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://:aAvKoDUPEHMsvBuaROPeDlhsoHiCoTKg@redis.railway.internal:6379/0',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'SSL' : True
-        }
-    }
-}
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://default:aAvKoDUPEHMsvBuaROPeDlhsoHiCoTKg@redis.railway.internal:6379/0',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#             'SSL' : True
+#         }
+#     }
+# }
+# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# SESSION_CACHE_ALIAS = "default"
 
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('redis://:aAvKoDUPEHMsvBuaROPeDlhsoHiCoTKg@redis.railway.internal:6379',)],
+            "hosts": [('redis://default:aAvKoDUPEHMsvBuaROPeDlhsoHiCoTKg@redis.railway.internal:6379',)],
         },
     },
 }
