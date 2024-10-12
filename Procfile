@@ -1,1 +1,1 @@
-web: daphne -u /tmp/daphne.sock myproject.asgi:application
+web: daphne -u /tmp/daphne.sock socialmedia.asgi:application
