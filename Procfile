@@ -1,1 +1,2 @@
-web: daphne -u /tmp/daphne.sock socialmedia.asgi:application
+web: daphne -b 0.0.0.0 -p $PORT socialmedia.asgi:application
+
