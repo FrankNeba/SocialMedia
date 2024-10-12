@@ -28,6 +28,8 @@ SECRET_KEY = 'django-insecure-_)8-yrfrjf$a9j6^2=-1c=k_tg62f2*ms@&qjt0(yc6k!##0pc
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://socialmedia-production-14f4.up.railway.app']
+
 
 
 # Application definition
