@@ -28,8 +28,8 @@ SECRET_KEY = 'django-insecure-_)8-yrfrjf$a9j6^2=-1c=k_tg62f2*ms@&qjt0(yc6k!##0pc
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://socialmedia-production-14f4.up.railway.app']
-
+# CSRF_TRUSTED_ORIGINS = ['https://socialmedia-production-14f4.up.railway.app']
+# CSRF_TRUSTED_ORIGINS = ['*']
 
 
 # Application definition
@@ -87,9 +87,12 @@ CACHES = {
         'LOCATION': 'redis://:aAvKoDUPEHMsvBuaROPeDlhsoHiCoTKg@redis.railway.internal:6379/0',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'SSL' : True
         }
     }
 }
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 CHANNEL_LAYERS = {
     'default': {
