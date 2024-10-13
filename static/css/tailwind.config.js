@@ -5,6 +5,7 @@ module.exports = {
     "../../posts/templates/posts/**/*.{html,js}",
     "../../authenticate/templates/authenticate/**/*.{html,js}",
     "../../adminpanel/templates/adminpanel/**/*.{html,js}",
+    "../../message/templates/message/**/*.{html,js}"
   ],
   theme: {
     extend: {

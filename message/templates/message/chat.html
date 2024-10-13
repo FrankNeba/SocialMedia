@@ -38,7 +38,9 @@
 
         {% endfor %}
         
-       <div class="w-full fixed flex bottom-0 left-0 justify-center p-2">
+      
+    </div>
+    <div class="w-full fixed flex bottom-0 left-0 justify-center p-2">
 
 
         <div  class="w-full  bg-slate-50 p-1 pl-4 rounded-3xl flex items-start border-2 border-primary justify-between px-3">
@@ -53,8 +55,6 @@
     </div>
     
      </div>
-    </div>
-
     <!-- <script src="https://kit.fontawesome.com/bef6373e3c.js" crossorigin="anonymous"></script> -->
     <script>
         
@@ -75,6 +75,9 @@
 
         const btn = document.getElementById('btn')
         function send(){
+            
+                
+            
             id = id + 1
             console.log(id)
             var message = document.getElementById('text').value
@@ -87,7 +90,8 @@
                     'id':id,
                 })
             )
-            
+           
+            document.getElementById('text').value = ''
         }
 
         const websocketProtocol = window.location.protocol === 'https:'? 'wss': 'ws'
@@ -119,24 +123,22 @@
             var receiver = data['receiver']
             id = data['id']
 
-            if (sender == '{{request.user}}'){
-                document.getElementById('text').value = ''
-            }
+            
 
             date = new Date()
-            time = date.getHours >= 12? `${date.getHours()}:${date.getMinutes()} p.m.` : date.getMinutes() > 9? `${date.getHours()}:${date.getMinutes()} a.m.`: `${date.getHours()}:0${date.getMinutes()} a.m.`
+            time = Number(date.getHours()) <= 12? `${date.getHours()}:${date.getMinutes()} p.m.` : Number(date.getMinutes()) > 9? `${date.getHours()}:${date.getMinutes()} a.m.`: `${date.getHours()}:0${date.getMinutes()} a.m.`
             var msg = document.getElementById('message-block')
-            if (sender == '{{user.id}}') {
+            if (sender === '{{user.id}}') {
                 msg.innerHTML +=  `
                     <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-yellow-400 rounded-r-3xl rounded-tl-3xl">
                         <p>${text}</p>
-                        <small>${time}</small>
+                        <small>${time}   ${Number(date.getHours())}</small>
                     </div>`}
             else {
                 msg.innerHTML +=  `
                     <div class="w-full flex justify-end">
                         <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-primary rounded-l-3xl rounded-tr-3xl">
-                            <p>${text}</p>
+                            <p>${text}  ${Number(date.getHours())}</p>
                             <small>${time}</small>
                         </div>
                     </div>` }
