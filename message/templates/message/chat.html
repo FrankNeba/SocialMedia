@@ -13,7 +13,7 @@
     </script>
   </head>
   <body class="bg-slate-100 flex flex-col relative">
-    <div class="w-full flex items-center bg-slate-300 sticky top-0 p-2">
+    <div class="w-full flex items-center bg-slate-300 sticky top-0 p-2" id = "nav">
       <a href="{% url 'chats'  %}" class="text-2xl text-primary w-fit m-5">
         <i class="fa-solid fa-circle-arrow-left"></i>
       </a>
@@ -23,7 +23,7 @@
       <h1 class="text-2xl font-semibold">{{user.username|capfirst}}</h1>
     </div>
     <div
-      class="w-full md:w-2/3 p-10 flex flex-col self-center space-y-3 pb-40 border border-primary min-h-[100vh] overflow-scroll"
+      class="w-full md:w-2/3 p-4 flex flex-col self-center space-y-3 pb-40 border border-primary min-h-[100vh] overflow-scroll"
       id="message-block"
     >
       {% for message in messages %} 
@@ -33,19 +33,24 @@
       <div
         class="max-w-[90%] w-fit flex-wrap border p-1 bg-yellow-400 rounded-r-3xl rounded-tl-3xl shadow-md"
         id="{{message.id}}"
-        
       >
       {% if message.replyTo %}
-        <a href="{{message.replyTo.id}}">
+        <div
+        onclick="view('{{message.replyTo.id}}')"
+        >
           <div
             class="px-3 py-1 bg-yellow-200 rounded-t-2xl rounded-b-lg w-full"
           >
             <legend class="font-medium text-primary">
-              {{message.sender.username|capfirst}}
+                {% if message.replyTo.sender == request.user %}
+                You
+                {% else %}
+                {{message.replyTo.sender.username|capfirst}}
+                {% endif %}
             </legend>
-            <p class="">{{message.text}}</p>
+            <p class="">{{message.replyTo.text}}</p>
           </div>
-        </a>
+        </div>
         {% endif %}
         <p class="px-2">{{message.text}}</p>
         <div class="flex justify-start items-center space-x-3">
@@ -71,14 +76,19 @@
           
         >
         {% if message.replyTo %}
-          <a href="{{message.replyTo.id}}">
+          <div
+          onclick="view('{{message.replyTo.id}}')">
             <div class="p-1 bg-blue-200 rounded-t-2xl rounded-b-lg w-full">
               <legend class="font-medium text-green-700 px-2">
+                {% if message.replyTo.sender == request.user %}
+                You
+                {% else %}
                 {{message.replyTo.sender.username|capfirst}}
+                {% endif %}
               </legend>
               <p class="px-2">{{message.replyTo.text}}</p>
             </div>
-          </a>
+        </div>
           {% endif %}
           <div class="flex w-full justify-end">
             <p class="px-2">{{message.text}}</p>
@@ -101,7 +111,7 @@
      <div id="end"></div>
       {% endif %} {% endfor %}
     </div>
-    <div class="w-full fixed flex flex-col bottom-0 left-0 justify-center p-2">
+    <div class="w-full fixed flex  bottom-0 left-0 justify-center p-2">
         
       <div
         class="w-full bg-slate-50 p-1 rounded-3xl items-start border-2 border-primary "
@@ -109,7 +119,8 @@
       >
         
 
-        <div class=" p-2 bg-slate-200 rounded-t-3xl rounded-b-lg w-full hidden relative" id="reply">
+        <div class=" p-2 bg-slate-200 rounded-t-2xl rounded-b-lg w-full hidden relative" id="reply">
+            
             
         </div>
         <div class="flex justify-between px-3 space-x-3 items-start">
@@ -142,20 +153,23 @@
             accept="video/mp4,video/x-m4v,video/*"
           />
       
-          <button type="button" id="btn" onclick="send()">
-            <i class="fa-regular fa-paper-plane text-primary"></i>
-          </button>
+          
         </div>
-        
-     
     </div>
+    <div class="">
+        <button type="button" id="btn" onclick="send()" class="bg-slate-100 ml-2 rounded-full h-16 p-4 border-2 border-primary bottom-0">
+        <i class="fa-regular fa-paper-plane text-primary"></i>
+        
+      </button>
+    </div>
+        
     </div>
     <!-- <script src="https://kit.fontawesome.com/bef6373e3c.js" crossorigin="anonymous"></script> -->
      
     <script>
        
 
-
+      const nav = document.getElementById('nav').offsetHeight
       let id = Number("{{id}}");
       var reply = null
       var replytext = null
@@ -166,7 +180,11 @@
       function sendReply(replyid, replyText, replyUser) {
         reply = replyid
         replytext = replyText
-        replyuser = replyUser[0].toUpperCase() + replyUser.slice(1);
+        replyuser = replyUser
+        if (replyuser === '{{me.username}}'){
+            replyuser = 'You'
+        }
+        replyuser = replyuser[0].toUpperCase() + replyuser.slice(1);
         // replyuser = replyuser.charAt(0).toUpperCase()
 
         section.classList.remove('hidden')
@@ -178,8 +196,22 @@
         <button
         onclick="hide()"
         class="absolute right-0 top-0 px-3  py-1"
-        ><i class="fa-solid fa-x"></i></button>`
+        ><i class="fa-solid fa-x text-slate-500"></i></button>
+        `
       }
+
+      function view(item){
+        const element = document.getElementById(item)
+
+        const height = element.getBoundingClientRect().top + window.pageYOffset 
+        window.scrollTo({
+            top: height - nav - 30,
+            behavior: "smooth",
+        })
+        
+      }
+
+     
 
       function hide(){
         section.classList.add('hidden')
@@ -204,6 +236,8 @@
 
       const btn = document.getElementById("btn");
       function send() {
+        var message = document.getElementById("text").value
+        if(message != ''){
         id = id + 1;
         console.log(id);
         var message = document.getElementById("text").value;
@@ -222,7 +256,7 @@
 
         document.getElementById("text").value = ""
         section.innerHTML = ''
-        section.classList.add('hidden')
+        section.classList.add('hidden')}
       }
 
       const websocketProtocol =
@@ -246,7 +280,7 @@
 
       socket.addEventListener("message", (e) => {
         const data = JSON.parse(e.data)["message"];
-        console.log(data);
+        // console.log(data);
 
         var sender = data["sender"];
         var text = data["message"];
@@ -255,6 +289,14 @@
         var replymessage = data['replytext']
         var replysender = data['replyuser']
         var msgid = data['msgid']
+        var replyidd = data['reply']
+        var users = ("{{me.username}}")
+        users = users[0].toUpperCase() + users.slice(1)
+        console.log(`1sender: ${replysender}   user:${users}` )
+        if(replysender === users){
+            replysender = 'You'
+        }
+        console.log(`sender: ${replysender}   user:${users}` )
 
         date = new Date();
         time =
@@ -300,7 +342,8 @@
         
       >
       
-        <a href="#3">
+        <div
+           onclick="view(${replyidd})">
           <div
             class="px-3 py-1 bg-yellow-200 rounded-t-2xl rounded-b-lg w-full"
           >
@@ -309,7 +352,7 @@
             </legend>
             <p class="">${replymessage}</p>
           </div>
-        </a>
+        </div>
          <p class="px-2">${text}</p>
         <div class="flex justify-start items-center space-x-3">
             <small class="px-2">${time}</small>
@@ -332,21 +375,22 @@
           id="${msgid}"
           
         >
-          <a href="{{message.replyTo.id}}">
+          <div
+           onclick="view(${replyidd})">
             <div class="p-1 bg-blue-200 rounded-t-2xl rounded-b-lg w-full">
               <legend class="font-medium text-green-700 px-2">
                  ${replysender}
               </legend>
               <p class="px-2">${replymessage}</p>
             </div>
-          </a>
+          </div>
           <div class="flex w-full justify-end">
             <p class="px-2">${text}</p>
           </div>
           <div class="flex w-full justify-end items-center space-x-3 ">
             <button 
                 class="text-sm text-white px-2"
-                onclick="sendReply(${msgid}, '${text}', '${'{{user.username}}'}')"
+                onclick="sendReply(${msgid}, '${text}', '${'{{me.username}}'}')"
                 >
                 reply
             </button>
@@ -364,7 +408,7 @@
       <div class="w-full flex justify-end">
         <div
           class="max-w-[90%] min-w-[30%] flex-wrap border p-1 bg-primary rounded-l-3xl rounded-tr-3xl shadow-md"
-          id="{{message.id}}"
+          id="${msgid}"
           
         >
           <div class="flex w-full justify-end">
@@ -373,11 +417,11 @@
           <div class="flex w-full justify-end items-center space-x-3 ">
             <button 
                 class="text-sm text-white px-2"
-                onclick="sendReply('{{message.id}}', '{{message.text}}', '{{message.sender.username}}')"
+                onclick="sendReply(${msgid}, '${text}', '${'{{me.username}}'}')"
                 >
                 reply
             </button>
-            <small class="pl-2">{{message.created|time}}</small> <br>
+            <small class="pl-2">${time}</small>
           
             
           </div>

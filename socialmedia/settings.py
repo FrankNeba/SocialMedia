@@ -99,8 +99,8 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             # "hosts": [('redis://red-cs59vfdumphs73aqsv10:6379')],
-            # "hosts": [('redis://default:ZQaUgMrZXyTEoZbGWbaQChfuXyZiHWIP@junction.proxy.rlwy.net:25326')],
-            'hosts': [('redis://localhost:6379/0')]
+            "hosts": [('redis://default:ZQaUgMrZXyTEoZbGWbaQChfuXyZiHWIP@junction.proxy.rlwy.net:25326')],
+            # 'hosts': [('redis://localhost:6379/0')]
             # 'hosts': [('redis://default:ZQaUgMrZXyTEoZbGWbaQChfuXyZiHWIP@redis-fxhu.railway.internal:6379')]
         },
     },

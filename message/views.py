@@ -56,5 +56,5 @@ def chat(request, pk):
 
         id = 1
     
-    context = {'messages':messages,'user':user, 'room_name':room_name,'id':id}
+    context = {'messages':messages,'user':user, 'room_name':room_name,'id':id, 'me':request.user}
     return render(request, 'message/chat.html', context)
