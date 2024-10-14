@@ -1,153 +1,399 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{user}}</title>
     {% include 'tailwind.html' %}
-</head>
-<body class="bg-slate-100 flex flex-col  ">
-    <div class="w-full flex items-center bg-slate-300 fixed top-0 left-0 p-2">
-        <a href="{% url 'chats'  %}" class="text-2xl text-primary w-fit m-5">
-           <i class="fa-solid fa-circle-arrow-left"></i>
-       </a>
-       <a href="{% url 'profile' user.id %}">
-        <img src="{{user.image.url}}" alt="" class="w-14 h-14 rounded-full">
-       </a>
-       <h1 class="text-2xl font-semibold">{{user.username|capfirst}}</h1>
-     </div>
-    <div class="w-full md:w-2/3 p-10 flex flex-col self-center mt-20 space-y-3 pb-40" id="message-block">
-        {% for message in messages %}
-            {% if message.sender != request.user %}
-                <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-yellow-400 rounded-r-3xl rounded-tl-3xl ">
-                    <p class="">{{message.text}} </p>
-                    <small>{{message.created|time}}</small>
 
-                </div>
-
-            {% else %}
-                <div class="w-full flex justify-end">
-                    <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-primary rounded-l-3xl rounded-tr-3xl ">
-                        <p class="">{{message.text}} </p>
-                        <small>{{message.created|time}}</small>
-                    </div>
-            
-                </div>
-                
-            {% endif %}
-
-        {% endfor %}
-        
-      
-    </div>
-    <div class="w-full fixed flex bottom-0 left-0 justify-center p-2">
-
-
-        <div  class="w-full  bg-slate-50 p-1 pl-4 rounded-3xl flex items-start border-2 border-primary justify-between px-3">
-        
-
-       <textarea name="text" id="text" class="w-[95%]  bg-slate-50 outline-none max-h-40 rounded-lg " rows="2"></textarea>
-       <button type="button" id="btn" onclick="send()">
-        <i class="fa-regular fa-paper-plane text-primary"></i>
-        send
-       </button>
-
-    </div>
-    
-     </div>
-    <!-- <script src="https://kit.fontawesome.com/bef6373e3c.js" crossorigin="anonymous"></script> -->
     <script>
+        window.onload = function() {
+           window.scrollTo(0, document.body.scrollHeight);
+       }
+    </script>
+  </head>
+  <body class="bg-slate-100 flex flex-col relative">
+    <div class="w-full flex items-center bg-slate-300 sticky top-0 p-2">
+      <a href="{% url 'chats'  %}" class="text-2xl text-primary w-fit m-5">
+        <i class="fa-solid fa-circle-arrow-left"></i>
+      </a>
+      <a href="{% url 'profile' user.id %}">
+        <img src="{{user.image.url}}" alt="" class="w-14 h-14 rounded-full" />
+      </a>
+      <h1 class="text-2xl font-semibold">{{user.username|capfirst}}</h1>
+    </div>
+    <div
+      class="w-full md:w-2/3 p-10 flex flex-col self-center space-y-3 pb-40 border border-primary min-h-[100vh] overflow-scroll"
+      id="message-block"
+    >
+      {% for message in messages %} 
+      {% if message.sender != request.user %}
+      
+     <div class="w-full">
+      <div
+        class="max-w-[90%] w-fit flex-wrap border p-1 bg-yellow-400 rounded-r-3xl rounded-tl-3xl shadow-md"
+        id="{{message.id}}"
         
-        // document.getElementById('form').addEventListener('click', ()=> {
-        //     console.log('form clicked')
-        // })
+      >
+      {% if message.replyTo %}
+        <a href="{{message.replyTo.id}}">
+          <div
+            class="px-3 py-1 bg-yellow-200 rounded-t-2xl rounded-b-lg w-full"
+          >
+            <legend class="font-medium text-primary">
+              {{message.sender.username|capfirst}}
+            </legend>
+            <p class="">{{message.text}}</p>
+          </div>
+        </a>
+        {% endif %}
+        <p class="px-2">{{message.text}}</p>
+        <div class="flex justify-start items-center space-x-3">
+            <small class="px-2">{{message.created|time}}</small>
+        
+            <button 
+            class="text-sm text-primary px-2"
+            onclick="sendReply('{{message.id}}', '{{message.text}}', '{{message.sender.username}}')"
+            >reply</button>
+        </div>
+       
+      </div>
+      </div>
+
+      {% else %}
+
+      
+
+      <div class="w-full flex justify-end">
+        <div
+          class="max-w-[90%] min-w-[30%] flex-wrap border p-1 bg-primary rounded-l-3xl rounded-tr-3xl shadow-md"
+          id="{{message.id}}"
+          
+        >
+        {% if message.replyTo %}
+          <a href="{{message.replyTo.id}}">
+            <div class="p-1 bg-blue-200 rounded-t-2xl rounded-b-lg w-full">
+              <legend class="font-medium text-green-700 px-2">
+                {{message.replyTo.sender.username|capfirst}}
+              </legend>
+              <p class="px-2">{{message.replyTo.text}}</p>
+            </div>
+          </a>
+          {% endif %}
+          <div class="flex w-full justify-end">
+            <p class="px-2">{{message.text}}</p>
+          </div>
+          <div class="flex w-full justify-end items-center space-x-3 ">
+            <button 
+                class="text-sm text-white px-2"
+                onclick="sendReply('{{message.id}}', '{{message.text}}', '{{message.sender.username}}')"
+                >
+                reply
+            </button>
+            <small class="pl-2">{{message.created|time}}</small> <br>
+          
+            
+          </div>
+          
+        </div>
+      </div>
+
+     <div id="end"></div>
+      {% endif %} {% endfor %}
+    </div>
+    <div class="w-full fixed flex flex-col bottom-0 left-0 justify-center p-2">
+        
+      <div
+        class="w-full bg-slate-50 p-1 rounded-3xl items-start border-2 border-primary "
+        onsubmit="send()"
+      >
         
 
-        let id = Number('{{id}}')
+        <div class=" p-2 bg-slate-200 rounded-t-3xl rounded-b-lg w-full hidden relative" id="reply">
+            
+        </div>
+        <div class="flex justify-between px-3 space-x-3 items-start">
+            <textarea
+            name="text"
+            id="text"
+            class="w-[95%] bg-slate-50 outline-none max-h-40 rounded-lg"
+            rows="2"
+            placeholder="Message"
+            oninput=""
+          ></textarea>
+          <label for="image">
+            <i class="fa-solid fa-camera text-primary"></i>
+          </label>
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            multiple
+            class="hidden"
+          />
+          <label for="video" class="text-primary">
+            <i class="fa-solid fa-video"></i>
+          </label>
+          <input
+            class="hidden"
+            type="file"
+            name="video"
+            id="video"
+            accept="video/mp4,video/x-m4v,video/*"
+          />
+      
+          <button type="button" id="btn" onclick="send()">
+            <i class="fa-regular fa-paper-plane text-primary"></i>
+          </button>
+        </div>
         
-        window.onload = () =>{
-            let name = '{{user.id}}'
-            window.scrollTo(0,document.body.scrollHeight)
-            console.log(id)
-        }
-
+     
+    </div>
+    </div>
+    <!-- <script src="https://kit.fontawesome.com/bef6373e3c.js" crossorigin="anonymous"></script> -->
+     
+    <script>
        
 
-        const btn = document.getElementById('btn')
-        function send(){
-            
-                
-            
-            id = id + 1
-            console.log(id)
-            var message = document.getElementById('text').value
-            socket.send(
-                JSON.stringify({
-                    'message':message,
-                    'room_name':'{{room_name}}',
-                    'sender':'{{request.user.id}}',
-                    'receiver':'{{user.id}}',
-                    'id':id,
-                })
-            )
-           
-            document.getElementById('text').value = ''
-        }
 
-        const websocketProtocol = window.location.protocol === 'https:'? 'wss': 'ws'
-        const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/notifications/{{room_name}}/`
-        const socket = new WebSocket(wsEndpoint)
+      let id = Number("{{id}}");
+      var reply = null
+      var replytext = null
+      var replyuser = null
+      var clicked
+      var section = document.getElementById('reply')
+
+      function sendReply(replyid, replyText, replyUser) {
+        reply = replyid
+        replytext = replyText
+        replyuser = replyUser[0].toUpperCase() + replyUser.slice(1);
+        // replyuser = replyuser.charAt(0).toUpperCase()
+
+        section.classList.remove('hidden')
+         section.innerHTML = `
+        <legend class="font-medium text-green-700">
+            ${replyuser}
+        </legend>
+        <p class="">${replyText}</p>
+        <button
+        onclick="hide()"
+        class="absolute right-0 top-0 px-3  py-1"
+        ><i class="fa-solid fa-x"></i></button>`
+      }
+
+      function hide(){
+        section.classList.add('hidden')
+        reply = null
+        replytext = null
+        replyuser = null
+      }
+
+      function longpress(){
+
+        clicked = setTimeout(() => {
+            alert('okay')
+        }, 4000)
         
+      }
 
-        socket.onopen = (e) =>{
-            console.log("websocket connection opened!")
-        }
+      function leave(){
+        clearTimeout(clicked)
+      }
 
-        socket.onclose = (e) =>{
-            console.log("websocket connection closed!")
-        }
+      
 
+      const btn = document.getElementById("btn");
+      function send() {
+        id = id + 1;
+        console.log(id);
+        var message = document.getElementById("text").value;
+        socket.send(
+          JSON.stringify({
+            message: message,
+            room_name: "{{room_name}}",
+            sender: "{{request.user.id}}",
+            receiver: "{{user.id}}",
+            id: id,
+            reply: reply,
+            replytext: replytext,
+            replyuser: replyuser,
+          })
+        );
 
-        socket.onerror = function (e) {
-    console.error("WebSocket encountered an error:", e);
-    alert("Error with WebSocket connection. Please try again.");
-};
+        document.getElementById("text").value = ""
+        section.innerHTML = ''
+        section.classList.add('hidden')
+      }
+
+      const websocketProtocol =
+        window.location.protocol === "https:" ? "wss" : "ws";
+      const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/notifications/{{room_name}}/`;
+      var socket = new WebSocket(wsEndpoint);
+
+      socket.onopen = (e) => {
+        console.log("websocket connection opened!");
+      };
+
+      socket.onclose = (e) => {
+        console.log("websocket connection closed!");
+        socket = new WebSocket(wsEndpoint);
+      };
+
+      socket.onerror = function (e) {
+        console.error("WebSocket encountered an error:", e);
+        alert("Error with WebSocket connection. Please try again.");
+      };
+
+      socket.addEventListener("message", (e) => {
+        const data = JSON.parse(e.data)["message"];
+        console.log(data);
+
+        var sender = data["sender"];
+        var text = data["message"];
+        var receiver = data["receiver"];
+        id = data["id"];
+        var replymessage = data['replytext']
+        var replysender = data['replyuser']
+        var msgid = data['msgid']
+
+        date = new Date();
+        time =
+          Number(date.getHours()) > 12
+            ? `${date.getHours() - 12}:${date.getMinutes()} p.m.`
+            : Number(date.getHours()) === 12 && Number(date.getMinutes()) < 9
+            ? `${date.getHours()}:0${date.getMinutes()} p.m.`
+            : Number(getHours()) === 12 && Number(date.getMinutes()) > 9
+            ? `${date.getHours()}:${date.getMinutes()} p.m.`
+            : Number(date.getMinutes()) > 9
+            ? `${date.getHours()}:${date.getMinutes()} a.m.`
+            : `${date.getHours()}:0${date.getMinutes()} a.m.`;
+        var msg = document.getElementById("message-block");
+        if (sender === "{{user.id}}") {
+            if(replymessage === null) {
+                msg.innerHTML += `
+                    <div class="w-full">
+      <div
+        class="max-w-[90%] w-fit flex-wrap border p-1 bg-yellow-400 rounded-r-3xl rounded-tl-3xl shadow-md"
+        id="${msgid}"
         
+      >
+        
+        <p class="px-2">${text}</p>
+        <div class="flex justify-start items-center space-x-3">
+            <small class="px-2">${time}</small>
+        
+            <button 
+            class="text-sm text-primary px-2"
+            onclick="sendReply(${msgid}, '${text}', '${'{{user.username}}'}')"
+            >reply</button>
+        </div>
+      </div>
+      </div>`
+            }
 
-        socket.addEventListener('message', (e) => {
-            const data = JSON.parse(e.data)['message']
-            console.log(data)
-
-            var sender = data['sender']
-            var text = data['message']
-            var receiver = data['receiver']
-            id = data['id']
-
-            
-
-            date = new Date()
-            time = Number(date.getHours()) <= 12? `${date.getHours()}:${date.getMinutes()} p.m.` : Number(date.getMinutes()) > 9? `${date.getHours()}:${date.getMinutes()} a.m.`: `${date.getHours()}:0${date.getMinutes()} a.m.`
-            var msg = document.getElementById('message-block')
-            if (sender === '{{user.id}}') {
-                msg.innerHTML +=  `
-                    <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-yellow-400 rounded-r-3xl rounded-tl-3xl">
-                        <p>${text}</p>
-                        <small>${time}   ${Number(date.getHours())}</small>
-                    </div>`}
             else {
-                msg.innerHTML +=  `
-                    <div class="w-full flex justify-end">
-                        <div class="max-w-[90%] w-fit flex-wrap border p-3 bg-primary rounded-l-3xl rounded-tr-3xl">
-                            <p>${text}  ${Number(date.getHours())}</p>
-                            <small>${time}</small>
-                        </div>
-                    </div>` }
+                msg.innerHTML += `
+                    <div class="w-full">
+      <div
+        class="max-w-[90%] w-fit flex-wrap border p-1 bg-yellow-400 rounded-r-3xl rounded-tl-3xl shadow-md"
+        id="${msgid}"
+        
+      >
+      
+        <a href="#3">
+          <div
+            class="px-3 py-1 bg-yellow-200 rounded-t-2xl rounded-b-lg w-full"
+          >
+            <legend class="font-medium text-primary">
+              ${replysender}
+            </legend>
+            <p class="">${replymessage}</p>
+          </div>
+        </a>
+         <p class="px-2">${text}</p>
+        <div class="flex justify-start items-center space-x-3">
+            <small class="px-2">${time}</small>
+        
+            <button 
+            class="text-sm text-primary px-2"
+            onclick="sendReply(${msgid}, '${text}', '${'{{user.username}}'}')"
+            >reply</button>
+        </div>
+      </div>
+      </div>`
+            }
+         ;
+        } else {
+            if(replymessage != null ){
+                msg.innerHTML += `
+                <div class="w-full flex justify-end">
+        <div
+          class="max-w-[90%] min-w-[30%] flex-wrap border p-1 bg-primary rounded-l-3xl rounded-tr-3xl shadow-md"
+          id="${msgid}"
+          
+        >
+          <a href="{{message.replyTo.id}}">
+            <div class="p-1 bg-blue-200 rounded-t-2xl rounded-b-lg w-full">
+              <legend class="font-medium text-green-700 px-2">
+                 ${replysender}
+              </legend>
+              <p class="px-2">${replymessage}</p>
+            </div>
+          </a>
+          <div class="flex w-full justify-end">
+            <p class="px-2">${text}</p>
+          </div>
+          <div class="flex w-full justify-end items-center space-x-3 ">
+            <button 
+                class="text-sm text-white px-2"
+                onclick="sendReply(${msgid}, '${text}', '${'{{user.username}}'}')"
+                >
+                reply
+            </button>
+            <small class="pl-2">${time}</small>
+          
+            
+          </div>
+          
+        </div>
+      </div>
+                `
+            }
+            else {
+                msg.innerHTML += `
+      <div class="w-full flex justify-end">
+        <div
+          class="max-w-[90%] min-w-[30%] flex-wrap border p-1 bg-primary rounded-l-3xl rounded-tr-3xl shadow-md"
+          id="{{message.id}}"
+          
+        >
+          <div class="flex w-full justify-end">
+            <p class="px-2">${text}</p>
+          </div>
+          <div class="flex w-full justify-end items-center space-x-3 ">
+            <button 
+                class="text-sm text-white px-2"
+                onclick="sendReply('{{message.id}}', '{{message.text}}', '{{message.sender.username}}')"
+                >
+                reply
+            </button>
+            <small class="pl-2">{{message.created|time}}</small> <br>
+          
+            
+          </div>
+          
+        </div>
+      </div>`
+            }
+         
+        }
 
-            window.scrollTo(0,document.body.scrollHeight)
-        })
-
-
+        window.scrollTo(0, document.body.scrollHeight);
+      });
     </script>
-     <script src="https://kit.fontawesome.com/bef6373e3c.js" crossorigin="anonymous"></script>
-</body>
+    <script
+      src="https://kit.fontawesome.com/bef6373e3c.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>

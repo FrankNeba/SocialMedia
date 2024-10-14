@@ -31,12 +31,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def send_message(self, event):
         data = event['message']
         
-        await self.create_message(data= data)
+        id = await self.create_message(data= data)
         response = {
             'sender':data['sender'],
             'message':data['message'],
             'receiver':data['receiver'],
             'id':data['id'],
+            'reply': data['reply'],
+            'replytext': data['replytext'],
+            'replyuser' : data['replyuser'],
+            'msgid': id
 
         }
         await self.send(text_data = json.dumps({'message':response}))
@@ -44,14 +48,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def create_message(self, data):
         # get_room_name = Message.getRoomName(data['sender'], data['receiver'])
-        print('here')
+        
         if not Message.objects.filter(idd = data['id'], sender__id = data['sender'],receiver__id = data['receiver'] ).exists():
-            print('there')
+            
             sender = User.objects.get(id = data['sender'])
             receiver = User.objects.get(id = data['receiver'])
             idd = data['id']
-            new_message = Message(text = data['message'], sender=sender, receiver = receiver, idd = idd)
+            reply = None
+            if data['reply']:
+                reply = Message.objects.get(id = data['reply'])
+            new_message = Message(text = data['message'], sender=sender, receiver = receiver, idd = idd, replyTo = reply)
             new_message.save()
+            return new_message.id
             
 
             

@@ -11,7 +11,7 @@ class Message(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
     idd = models.PositiveIntegerField(default = 0)
-
+    replyTo = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_DEFAULT, default=None, related_name='replies' )
     class Meta:
         ordering = ['created']
 
@@ -21,4 +21,4 @@ class Message(models.Model):
         
 
     def __str__(self):
-        return f'{self.sender.username} to {self.receiver.username}: {self.text[:20]}'
+        return f'from {self.sender.username} to {self.receiver.username} at {self.created}'
