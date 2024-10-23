@@ -49,7 +49,7 @@
         </div>
         <hr />
 
-        <p class=" select-all text-truncate overflow-hidden" id="post-text">{{post.text}}</p>
+        <p class=" clamp-2 max-h-20" id="post-text">{{post.text|truncatewords_html:30}}</p>
         {% if post.text|length > 80 %}
         <button id="see-more" class=" opacity-30">see more</button>
         {% endif %}

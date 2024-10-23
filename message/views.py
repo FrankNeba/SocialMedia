@@ -37,6 +37,28 @@ def chats(request):
 
 @login_required(login_url="login")
 def chat(request, pk):
+    user = request.user
+    messages = (Message.objects.filter(Q(sender = user) | Q(receiver = user)))
+    # messages.sort(key = lambda  x: x.created, reverse=True)
+    chats = {}
+    for message in messages:
+        if message.sender != user:
+            try:
+                chats.pop(message.sender)
+                chats[message.sender]= message 
+            except:
+                chats[message.sender]= message
+        else:
+            try:
+                chats[message.receiver]=message
+                chats.pop(message.sender)
+            except:
+                chats[message.receiver]=message
+    chats = [[key,value] for key,value in chats.items()]
+    print(chats)
+    chats.sort( key = lambda x : x[1].created, reverse=True)
+
+    chats = dict(chats)
     user = User.objects.get(id = pk)
     if request.method == 'POST':
         text = request.POST.get('text')
@@ -56,5 +78,5 @@ def chat(request, pk):
 
         id = 1
     
-    context = {'messages':messages,'user':user, 'room_name':room_name,'id':id, 'me':request.user}
+    context = {'messages':messages,'user':user, 'room_name':room_name,'id':id, 'me':request.user, 'chats':chats}
     return render(request, 'message/chat.html', context)
