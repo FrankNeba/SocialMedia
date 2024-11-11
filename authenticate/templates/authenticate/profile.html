@@ -8,7 +8,7 @@
   </head>
   <body class="bg-slate-100 flex flex-col items-center text-slate-700">
     
-    <div class="w-full md:w-2/3 p-3 flex flex-col">
+    <div class="w-full lg:w-2/3 p-3 flex flex-col">
       <div class="w-full">
         <a href="{% url 'home'  %}" class="text-2xl text-primary w-fit m-5">
            <i class="fa-solid fa-circle-arrow-left"></i>
@@ -19,7 +19,7 @@
           <img
           src="{{user.image.url}}"
           alt="{{user.username}}"
-          class="w-60 h-60 rounded-full border-2 border-primary"
+          class="w-60 h-52 rounded-full border-2 border-primary"
         />
         {% if request.user == user %}
           <form action="" method="post" enctype="multipart/form-data" class="absolute bottom-[10%] right-[5%]" id="form">
@@ -36,10 +36,10 @@
         <div class="flex flex-col relative w-full items-center pb-16">
           <div class="flex flex-row w-full space-x-3 justify-center items-center flex-wrap">
             {% if user.first_name %}
-            <p class="text-3xl font-bold">{{user.first_name}}</p>
+            <p class="text-3xl font-bold">{{user.first_name|capfirst}}</p>
             {% endif %}
             {% if user.last_name %}
-            <p class="text-3xl font-bold">{{user.last_name}}</p>
+            <p class="text-3xl font-bold">{{user.last_name|capfirst}}</p>
             {% endif %}
           </div>
 
@@ -89,7 +89,7 @@
       </div>
       <div class="flex flex-col md:flex-row gap-3 ">
         <div class="md:w-1/2 w-full flex flex-col max-h-80 overflow-scroll border bg-white">
-          <h3 class="font-medium w-full p-3 bg-white mb-3 shadow-md">{{followers.count}} Followers</h3>
+          <h3 class="font-medium w-full p-3 bg-white mb-3 shadow-md sticky">{{followers.count}} Followers</h3>
           {% for follower in followers %}
           <div class="flex flex-row justify-between items-center p-2">
             <a
@@ -142,9 +142,13 @@
           {% endfor%}
         </div>
         <div class="md:w-1/2 w-full flex flex-col max-h-80 overflow-scroll border bg-white">
-          <h3 class="font-medium w-full p-3 bg-white mb-3 shadow-md">{{followings.count}} Following</h3>
+          <div class="sticky">
+            
+          </div>
+          <h3 class="font-medium w-full p-3 bg-white mb-3 shadow-md sticky">{{followings.count}} Following</h3>
           {% for following in followings %}
-          <div class="flex flex-row justify-between items-center p-2">
+          <div>
+            <div class="flex flex-row  overflow-scroll justify-between items-center p-2">
             <a
               href="{% url 'profile' following.user.id %}"
               class="flex gap-3 items-center"
@@ -189,6 +193,8 @@
             </a>
             {% endif %}
           </div>
+          </div>
+          
 
           {% endfor%}
         </div>

@@ -107,7 +107,7 @@
 }
 
 /*
-! tailwindcss v3.4.13 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.14 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -550,7 +550,7 @@ video {
 
 /* Make elements with the HTML hidden attribute stay hidden by default */
 
-[hidden] {
+[hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
 
@@ -610,6 +610,14 @@ video {
   z-index: 50;
 }
 
+.z-20 {
+  z-index: 20;
+}
+
+.float-right {
+  float: right;
+}
+
 .m-3 {
   margin: 0.75rem;
 }
@@ -656,6 +664,14 @@ video {
   margin-top: 0.75rem;
 }
 
+.mr-\[70\%\] {
+  margin-right: 70%;
+}
+
+.ml-\[70\%\] {
+  margin-left: 70%;
+}
+
 .block {
   display: block;
 }
@@ -692,6 +708,10 @@ video {
   height: 5rem;
 }
 
+.h-52 {
+  height: 13rem;
+}
+
 .h-60 {
   height: 15rem;
 }
@@ -702,18 +722,6 @@ video {
 
 .h-\[100vh\] {
   height: 100vh;
-}
-
-.h-40 {
-  height: 10rem;
-}
-
-.h-full {
-  height: 100%;
-}
-
-.h-1\/2 {
-  height: 50%;
 }
 
 .h-\[80vh\] {
@@ -935,6 +943,12 @@ video {
   overflow: scroll;
 }
 
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .whitespace-normal {
   white-space: normal;
 }
@@ -1025,6 +1039,11 @@ video {
   background-color: rgb(66 138 245 / var(--tw-bg-opacity));
 }
 
+.bg-red-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
+}
+
 .bg-red-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
@@ -1063,6 +1082,11 @@ video {
 .bg-yellow-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 204 21 / var(--tw-bg-opacity));
+}
+
+.bg-blue-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
 }
 
 .p-1 {
@@ -1299,8 +1323,16 @@ video {
     position: absolute;
   }
 
+  .md\:right-0 {
+    right: 0px;
+  }
+
   .md\:block {
     display: block;
+  }
+
+  .md\:flex {
+    display: flex;
   }
 
   .md\:hidden {
@@ -1330,5 +1362,19 @@ video {
   .md\:px-10 {
     padding-left: 2.5rem;
     padding-right: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:flex {
+    display: flex;
+  }
+
+  .lg\:w-2\/3 {
+    width: 66.666667%;
+  }
+
+  .lg\:w-1\/2 {
+    width: 50%;
   }
 }
